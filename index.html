@@ -6,23 +6,28 @@
     <title>Cheetah Facts</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             margin: 0;
             padding: 0;
-            background-color: #f4f4f9;
+            background-color: #f0f2f5;
+            color: #333;
         }
 
         #app {
-            max-width: 600px;
+            max-width: 800px;
             margin: 50px auto;
             padding: 20px;
             background-color: #fff;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
         }
 
         h1 {
             text-align: center;
-            color: #333;
+            color: #007bff;
+            margin-bottom: 20px;
+            animation: fadeIn 1s ease-in-out;
         }
 
         ul {
@@ -31,14 +36,45 @@
         }
 
         li {
-            background-color: #e2e2e2;
+            background-color: #e9ecef;
             margin: 10px 0;
             padding: 15px;
             border-radius: 5px;
+            transition: background-color 0.3s, transform 0.3s;
+            animation: slideIn 0.5s ease-in-out;
         }
 
-        li:nth-child(even) {
-            background-color: #d1d1d1;
+        li:hover {
+            background-color: #dee2e6;
+            transform: scale(1.05);
+        }
+
+        button {
+            display: block;
+            margin: 20px auto;
+            padding: 12px 24px;
+            font-size: 16px;
+            cursor: pointer;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+            animation: fadeIn 1s ease-in-out;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(-100%); }
+            to { transform: translateX(0); }
         }
     </style>
 </head>
@@ -46,58 +82,49 @@
     <div id="app">
         <h1>Cheetah Facts</h1>
         <ul id="facts-list"></ul>
+        <button id="replace-facts">Replace Facts</button>
     </div>
     <script>
         const cheetahFacts = [
-            {
-                fact: "Speed",
-                description: "Cheetahs are the fastest land animals, capable of reaching speeds up to 60-70 miles per hour (97-113 km/h) in short bursts covering distances up to 1,500 feet (460 meters)."
-            },
-            {
-                fact: "Acceleration",
-                description: "They can accelerate from 0 to 60 miles per hour in just a few seconds, faster than most sports cars."
-            },
-            {
-                fact: "Body Adaptations",
-                description: "Cheetahs have a lightweight frame, long legs, and a flexible spine that allows them to stretch their bodies while running, contributing to their incredible speed."
-            },
-            {
-                fact: "Claws",
-                description: "Unlike other big cats, cheetahs have non-retractable claws that provide extra grip during high-speed chases."
-            },
-            {
-                fact: "Hunting Strategy",
-                description: "Cheetahs rely on their speed and stealth to hunt, often getting as close as possible to their prey before launching a high-speed chase."
-            },
-            {
-                fact: "Social Structure",
-                description: "Female cheetahs are solitary except when raising cubs, while males often form small groups called coalitions, usually consisting of brothers."
-            },
-            {
-                fact: "Vocalizations",
-                description: "Cheetahs communicate with a variety of sounds, including purrs, chirps, growls, and hisses, but they cannot roar like other big cats."
-            },
-            {
-                fact: "Habitat",
-                description: "They are primarily found in sub-Saharan Africa, with small populations in Iran. They prefer open savannahs and grasslands where they can use their speed to hunt."
-            },
-            {
-                fact: "Conservation Status",
-                description: "Cheetahs are classified as vulnerable, with threats including habitat loss, human-wildlife conflict, and illegal wildlife trade."
-            },
-            {
-                fact: "Unique Markings",
-                description: "Each cheetah has a unique pattern of spots on its coat, which can be used to identify individuals, similar to human fingerprints."
-            }
+            { fact: "Speed", description: "Cheetahs are the fastest land animals, capable of reaching speeds up to 60-70 miles per hour (97-113 km/h) in short bursts covering distances up to 1,500 feet (460 meters)." },
+            { fact: "Acceleration", description: "They can accelerate from 0 to 60 miles per hour in just a few seconds, faster than most sports cars." },
+            { fact: "Body Adaptations", description: "Cheetahs have a lightweight frame, long legs, and a flexible spine that allows them to stretch their bodies while running, contributing to their incredible speed." },
+            { fact: "Claws", description: "Unlike other big cats, cheetahs have non-retractable claws that provide extra grip during high-speed chases." },
+            { fact: "Hunting Strategy", description: "Cheetahs rely on their speed and stealth to hunt, often getting as close as possible to their prey before launching a high-speed chase." },
+            { fact: "Social Structure", description: "Female cheetahs are solitary except when raising cubs, while males often form small groups called coalitions, usually consisting of brothers." },
+            { fact: "Vocalizations", description: "Cheetahs communicate with a variety of sounds, including purrs, chirps, growls, and hisses, but they cannot roar like other big cats." },
+            { fact: "Habitat", description: "They are primarily found in sub-Saharan Africa, with small populations in Iran. They prefer open savannahs and grasslands where they can use their speed to hunt." },
+            { fact: "Conservation Status", description: "Cheetahs are classified as vulnerable, with threats including habitat loss, human-wildlife conflict, and illegal wildlife trade." },
+            { fact: "Unique Markings", description: "Each cheetah has a unique pattern of spots on its coat, which can be used to identify individuals, similar to human fingerprints." }
+        ];
+
+        const newCheetahFacts = [
+            { fact: "Vision", description: "Cheetahs have excellent vision, especially during the day, which helps them spot prey from a distance." },
+            { fact: "Tail", description: "Their long tail helps them balance and steer while running at high speeds." },
+            { fact: "Lifespan", description: "In the wild, cheetahs live for about 10 to 12 years, while in captivity they can live up to 17 years." },
+            { fact: "Diet", description: "Cheetahs primarily eat small to medium-sized ungulates, such as gazelles and impalas." },
+            { fact: "Cubs", description: "Cheetah cubs are born with a mantle of long, blue-gray hair on their backs, which helps camouflage them in the grass." }
         ];
 
         const factsList = document.getElementById('facts-list');
+        const replaceButton = document.getElementById('replace-facts');
 
-        cheetahFacts.forEach(fact => {
-            const listItem = document.createElement('li');
-            listItem.innerHTML = `<strong>${fact.fact}:</strong> ${fact.description}`;
-            factsList.appendChild(listItem);
+        function displayFacts(factsArray) {
+            factsList.innerHTML = '';
+            factsArray.forEach(fact => {
+                const listItem = document.createElement('li');
+                listItem.innerHTML = `<strong>${fact.fact}:</strong> ${fact.description}`;
+                factsList.appendChild(listItem);
+            });
+        }
+
+        replaceButton.addEventListener('click', () => {
+            displayFacts(newCheetahFacts);
         });
+
+        // Initial display of facts
+        displayFacts(cheetahFacts);
     </script>
 </body>
 </html>
+
